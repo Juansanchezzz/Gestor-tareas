@@ -1,0 +1,61 @@
+services:
+
+  # 🟢 MongoDB (para usuarios)
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - gtu-network
+
+  # 🔵 Microservicio Usuarios (Mongo)
+  usuarios:
+    build: ./Usuarios
+    depends_on:
+      - mongodb
+    ports:
+      - "3001:3001"
+    networks:
+      - gtu-network
+
+  # 🟡 Microservicio Materias (memoria o MySQL si quieres dejarlo)
+  materias:
+    build: ./Materias
+    ports:
+      - "3002:3002"
+    networks:
+      - gtu-network
+
+  # 🔴 Microservicio Tareas
+  tareas:
+    build: ./Tareas
+    depends_on:
+      - usuarios
+      - materias
+    ports:
+      - "3003:3003"
+    networks:
+      - gtu-network
+
+  # 🧠 API GATEWAY (NUEVO 🔥)
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - usuarios
+      - materias
+      - tareas
+    networks:
+      - gtu-network
+
+# 🌐 Red
+networks:
+  gtu-network:
+
+# 💾 Volumen Mongo
+volumes:
+  mongo-data:
