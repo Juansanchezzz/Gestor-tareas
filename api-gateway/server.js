@@ -4,9 +4,7 @@ const axios = require('axios');
 const app = express();
 app.use(express.json());
 
-/* =========================
-   USUARIOS
-========================= */
+
 
 // GET usuarios
 app.get('/usuarios', async (req, res) => {
@@ -29,9 +27,7 @@ app.post('/usuarios', async (req, res) => {
 });
 
 
-/* =========================
-   MATERIAS
-========================= */
+
 
 // GET materias
 app.get('/materias', async (req, res) => {
@@ -54,9 +50,6 @@ app.post('/materias', async (req, res) => {
 });
 
 
-/* =========================
-   TAREAS
-========================= */
 
 // GET tareas
 app.get('/tareas', async (req, res) => {
