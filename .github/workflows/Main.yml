@@ -11,8 +11,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install dependencies (usuarios)
+        run: cd Usuarios && npm install
+
+      - name: Install dependencies (materias)
+        run: cd Materias && npm install
+
+      - name: Install dependencies (tareas)
+        run: cd Tareas && npm install
+
+      - name: Install dependencies (api-gateway)
+        run: cd api-gateway && npm install
 
       - name: Run project
         run: echo "Proyecto validado correctamente"
