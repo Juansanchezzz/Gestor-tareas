@@ -1,4 +1,5 @@
 services:
+  
 
   # 🟢 MongoDB (para usuarios)
   mongodb:
@@ -51,6 +52,18 @@ services:
       - tareas
     networks:
       - gtu-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - api-gateway
+    networks:
+      - gtu-network    
+
+      
+    
 
 # 🌐 Red
 networks:

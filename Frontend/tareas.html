@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GTU — Tareas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    :root { --azul:#1e3a5f; --azul-med:#2c5282; --acento:#4a9eff; --sidebar-w:250px; }
+    body { font-family:'Segoe UI',sans-serif; background:#f0f4f8; }
+    .sidebar {
+      position:fixed; top:0; left:0; width:var(--sidebar-w); height:100vh;
+      background:linear-gradient(180deg,var(--azul) 0%,var(--azul-med) 100%);
+      color:white; display:flex; flex-direction:column; z-index:100;
+      box-shadow:4px 0 20px rgba(0,0,0,.15);
+    }
+    .sidebar-brand {
+      padding:1.5rem; border-bottom:1px solid rgba(255,255,255,.1);
+      display:flex; align-items:center; gap:.75rem;
+    }
+    .brand-icon {
+      width:40px; height:40px; background:rgba(255,255,255,.15);
+      border-radius:10px; display:flex; align-items:center;
+      justify-content:center; font-size:1.2rem;
+    }
+    .brand-text { font-size:1.2rem; font-weight:700; }
+    .brand-sub  { font-size:.65rem; opacity:.6; margin-top:1px; }
+    .sidebar-nav { padding:1rem 0; flex:1; }
+    .nav-label {
+      font-size:.65rem; text-transform:uppercase;
+      letter-spacing:.1em; opacity:.5; padding:.75rem 1.5rem .25rem;
+    }
+    .nav-item a {
+      display:flex; align-items:center; gap:.75rem;
+      padding:.7rem 1.5rem; color:rgba(255,255,255,.75);
+      text-decoration:none; transition:all .2s;
+      font-size:.9rem; border-left:3px solid transparent;
+    }
+    .nav-item a:hover,.nav-item a.active {
+      background:rgba(255,255,255,.1); color:white; border-left-color:var(--acento);
+    }
+    .nav-item a i { font-size:1.1rem; width:20px; text-align:center; }
+    .sidebar-footer { padding:1rem 1.5rem; border-top:1px solid rgba(255,255,255,.1); }
+    .user-info { display:flex; align-items:center; gap:.75rem; margin-bottom:.75rem; }
+    .user-avatar {
+      width:36px; height:36px; border-radius:50%;
+      background:var(--acento); display:flex; align-items:center;
+      justify-content:center; font-weight:700; font-size:.9rem;
+    }
+    .user-name  { font-size:.875rem; font-weight:600; }
+    .user-email { font-size:.7rem; opacity:.6; }
+    .btn-logout {
+      width:100%; background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.2); color:white;
+      padding:.4rem; border-radius:8px; font-size:.8rem; cursor:pointer;
+    }
+    .btn-logout:hover { background:rgba(255,0,0,.2); }
+    .main-content { margin-left:var(--sidebar-w); min-height:100vh; }
+    .topbar {
+      background:white; padding:1rem 2rem;
+      border-bottom:1px solid #e5e7eb;
+      display:flex; justify-content:space-between; align-items:center;
+      box-shadow:0 1px 4px rgba(0,0,0,.06);
+    }
+    .topbar h4 { margin:0; font-weight:700; color:var(--azul); }
+    .topbar-sub { color:#6b7280; font-size:.85rem; }
+    .page-body { padding:2rem; }
+    .btn-nueva {
+      background:linear-gradient(135deg,var(--azul),var(--azul-med));
+      border:none; color:white; font-weight:600;
+      padding:.6rem 1.25rem; border-radius:8px; font-size:.9rem;
+    }
+    .btn-nueva:hover { opacity:.9; color:white; }
+    .tabla-card {
+      background:white; border-radius:12px;
+      border:1px solid #e5e7eb; overflow:hidden;
+    }
+    .tabla-card table { margin:0; }
+    .tabla-card thead th {
+      background:#f8fafc; font-size:.8rem;
+      text-transform:uppercase; letter-spacing:.05em;
+      color:#6b7280; font-weight:600; border-bottom:2px solid #e5e7eb;
+      padding:.875rem 1.25rem;
+    }
+    .tabla-card tbody td { padding:.875rem 1.25rem; vertical-align:middle; font-size:.9rem; }
+    .tabla-card tbody tr:hover { background:#f9fafb; }
+    .badge-id { background:#d1fae5; color:#065f46; font-size:.75rem; padding:.25rem .6rem; border-radius:6px; font-weight:600; }
+    .empty-state { text-align:center; padding:3rem; color:#9ca3af; }
+    .empty-state i { font-size:3rem; opacity:.3; display:block; margin-bottom:1rem; }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
+    <div>
+      <div class="brand-text">GTU</div>
+      <div class="brand-sub">Gestor Universitario</div>
+    </div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Menú principal</div>
+    <div class="nav-item"><a href="dashboard.html"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a></div>
+    <div class="nav-item"><a href="materias.html"><i class="bi bi-book-fill"></i> Materias</a></div>
+    <div class="nav-item"><a href="tareas.html" class="active"><i class="bi bi-check2-square"></i> Tareas</a></div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="user-info">
+      <div class="user-avatar" id="avatarLetra">?</div>
+      <div>
+        <div class="user-name"  id="sideNombre">—</div>
+        <div class="user-email" id="sideCorreo">—</div>
+      </div>
+    </div>
+    <button class="btn-logout" onclick="cerrarSesion()">
+      <i class="bi bi-box-arrow-right me-1"></i> Cerrar sesión
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-content">
+  <div class="topbar">
+    <div>
+      <h4>Tareas</h4>
+      <div class="topbar-sub">Gestión de tareas académicas</div>
+    </div>
+    <button class="btn btn-nueva" data-bs-toggle="modal" data-bs-target="#modalNuevaTarea">
+      <i class="bi bi-plus-lg me-1"></i> Nueva tarea
+    </button>
+  </div>
+
+  <div class="page-body">
+    <div id="alertaGlobal" class="d-none mb-3"></div>
+
+    <div class="tabla-card">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Usuario</th>
+            <th>Materia</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tablaTareas">
+          <tr>
+            <td colspan="5" class="text-center p-3">
+              <div class="spinner-border spinner-border-sm me-2"></div>Cargando tareas...
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL NUEVA TAREA -->
+<div class="modal fade" id="modalNuevaTarea" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:16px;border:none">
+      <div class="modal-header" style="background:linear-gradient(135deg,var(--azul),var(--azul-med));color:white;border-radius:16px 16px 0 0">
+        <h5 class="modal-title"><i class="bi bi-check2-square me-2"></i>Nueva tarea</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body p-4">
+        <div id="alertaModal" class="d-none mb-3"></div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Título de la tarea</label>
+          <input type="text" id="inputTitulo" class="form-control"
+                 placeholder="Ej: Estudiar para el parcial" style="border-radius:8px">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Materia</label>
+          <select id="selectMateria" class="form-select" style="border-radius:8px">
+            <option value="">Selecciona una materia...</option>
+          </select>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Usuario asignado</label>
+          <select id="selectUsuario" class="form-select" style="border-radius:8px">
+            <option value="">Selecciona un usuario...</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer" style="border-top:1px solid #f3f4f6">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-nueva" id="btnGuardar" onclick="crearTarea()">
+          <i class="bi bi-check2 me-1"></i>Guardar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const API = 'http://localhost:3000';
+
+  const token   = localStorage.getItem('token');
+  const usuario = JSON.parse(localStorage.getItem('usuario') || '{}');
+  if (!token) window.location.href = 'login.html';
+
+  document.getElementById('sideNombre').textContent  = usuario.nombre || '';
+  document.getElementById('sideCorreo').textContent  = usuario.correo || '';
+  document.getElementById('avatarLetra').textContent = (usuario.nombre || 'U')[0].toUpperCase();
+
+  let materiasCache  = [];
+  let usuariosCache  = [];
+
+  async function cargarDatos() {
+    try {
+      const [rT, rM, rU] = await Promise.all([
+        fetch(`${API}/tareas`),
+        fetch(`${API}/materias`),
+        fetch(`${API}/usuarios`)
+      ]);
+
+      const tareas   = await rT.json();
+      materiasCache  = await rM.json();
+      usuariosCache  = await rU.json();
+
+      // Poblar selects del modal
+      document.getElementById('selectMateria').innerHTML =
+        '<option value="">Selecciona una materia...</option>' +
+        materiasCache.map(m => `<option value="${m.id}">${m.nombre}</option>`).join('');
+
+      document.getElementById('selectUsuario').innerHTML =
+        '<option value="">Selecciona un usuario...</option>' +
+        usuariosCache.map(u => `<option value="${u._id}">${u.nombre}</option>`).join('');
+
+      // Renderizar tabla
+      const tbody = document.getElementById('tablaTareas');
+
+      if (!tareas.length) {
+        tbody.innerHTML = `
+          <tr><td colspan="5">
+            <div class="empty-state">
+              <i class="bi bi-check2-square"></i>
+              No hay tareas registradas aún.
+            </div>
+          </td></tr>`;
+        return;
+      }
+
+      const nombreMateria = (id) => {
+        const m = materiasCache.find(m => m.id == id);
+        return m ? m.nombre : `Materia ${id}`;
+      };
+      const nombreUsuario = (id) => {
+        const u = usuariosCache.find(u => u._id == id || u.id == id);
+        return u ? u.nombre : `Usuario ${id}`;
+      };
+
+      tbody.innerHTML = tareas.map(t => `
+        <tr>
+          <td><span class="badge-id">#${t.id}</span></td>
+          <td><strong>${t.titulo}</strong></td>
+          <td>
+            <i class="bi bi-person-circle me-1 text-primary"></i>
+            ${nombreUsuario(t.usuarioId)}
+          </td>
+          <td>
+            <span class="badge bg-warning-subtle text-warning-emphasis">
+              ${nombreMateria(t.materiaId)}
+            </span>
+          </td>
+          <td><span class="badge bg-success-subtle text-success">Pendiente</span></td>
+        </tr>`).join('');
+
+    } catch (err) {
+      document.getElementById('tablaTareas').innerHTML = `
+        <tr><td colspan="5" class="text-center text-danger p-3">
+          <i class="bi bi-exclamation-triangle me-2"></i>No se pudo conectar al servidor
+        </td></tr>`;
+    }
+  }
+
+  async function crearTarea() {
+    const titulo     = document.getElementById('inputTitulo').value.trim();
+    const materiaId  = document.getElementById('selectMateria').value;
+    const usuarioId  = document.getElementById('selectUsuario').value;
+    const alerta     = document.getElementById('alertaModal');
+    const btn        = document.getElementById('btnGuardar');
+
+    if (!titulo || !materiaId || !usuarioId) {
+      alerta.className = 'alert alert-warning';
+      alerta.innerHTML = '<i class="bi bi-exclamation-circle me-2"></i>Completa todos los campos';
+      alerta.classList.remove('d-none');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Guardando...';
+
+    try {
+      const resp = await fetch(`${API}/tareas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ titulo, materiaId: parseInt(materiaId), usuarioId })
+      });
+
+      if (!resp.ok) throw new Error();
+
+      bootstrap.Modal.getInstance(document.getElementById('modalNuevaTarea')).hide();
+      document.getElementById('inputTitulo').value = '';
+      document.getElementById('selectMateria').value = '';
+      document.getElementById('selectUsuario').value = '';
+      alerta.classList.add('d-none');
+
+      const ag = document.getElementById('alertaGlobal');
+      ag.className = 'alert alert-success';
+      ag.innerHTML = '<i class="bi bi-check-circle me-2"></i>¡Tarea creada correctamente!';
+      ag.classList.remove('d-none');
+      setTimeout(() => ag.classList.add('d-none'), 3000);
+
+      cargarDatos();
+
+    } catch (err) {
+      alerta.className = 'alert alert-danger';
+      alerta.innerHTML = '<i class="bi bi-x-circle me-2"></i>Error al crear la tarea';
+      alerta.classList.remove('d-none');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-check2 me-1"></i>Guardar';
+    }
+  }
+
+  function cerrarSesion() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('usuario');
+    window.location.href = 'login.html';
+  }
+
+  cargarDatos();
+</script>
+</body>
+</html>

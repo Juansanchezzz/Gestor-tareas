@@ -1,12 +1,35 @@
 const express = require('express');
-const axios = require('axios');
+const axios   = require('axios');
+const cors    = require('cors');
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
+// ── AUTENTICACIÓN ─────────────────────────────────────
 
+app.post('/registro', async (req, res) => {
+  try {
+    const resp = await axios.post('http://usuarios:3001/registro', req.body);
+    res.json(resp.data);
+  } catch (err) {
+    const msg = err.response?.data || { error: 'Error en registro' };
+    res.status(err.response?.status || 500).json(msg);
+  }
+});
 
-// GET usuarios
+app.post('/login', async (req, res) => {
+  try {
+    const resp = await axios.post('http://usuarios:3001/login', req.body);
+    res.json(resp.data);
+  } catch (err) {
+    const msg = err.response?.data || { error: 'Error en login' };
+    res.status(err.response?.status || 500).json(msg);
+  }
+});
+
+// ── USUARIOS ──────────────────────────────────────────
+
 app.get('/usuarios', async (req, res) => {
   try {
     const resp = await axios.get('http://usuarios:3001/usuarios');
@@ -16,7 +39,6 @@ app.get('/usuarios', async (req, res) => {
   }
 });
 
-// POST usuarios
 app.post('/usuarios', async (req, res) => {
   try {
     const resp = await axios.post('http://usuarios:3001/usuarios', req.body);
@@ -26,10 +48,8 @@ app.post('/usuarios', async (req, res) => {
   }
 });
 
+// ── MATERIAS ──────────────────────────────────────────
 
-
-
-// GET materias
 app.get('/materias', async (req, res) => {
   try {
     const resp = await axios.get('http://materias:3002/materias');
@@ -39,7 +59,6 @@ app.get('/materias', async (req, res) => {
   }
 });
 
-// POST materias
 app.post('/materias', async (req, res) => {
   try {
     const resp = await axios.post('http://materias:3002/materias', req.body);
@@ -49,9 +68,8 @@ app.post('/materias', async (req, res) => {
   }
 });
 
+// ── TAREAS ────────────────────────────────────────────
 
-
-// GET tareas
 app.get('/tareas', async (req, res) => {
   try {
     const resp = await axios.get('http://tareas:3003/tareas');
@@ -61,7 +79,6 @@ app.get('/tareas', async (req, res) => {
   }
 });
 
-// POST tareas
 app.post('/tareas', async (req, res) => {
   try {
     const resp = await axios.post('http://tareas:3003/tareas', req.body);
@@ -71,4 +88,4 @@ app.post('/tareas', async (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log('API Gateway corriendo en puerto 3000'));
+app.listen(3000, () => console.log('✅ API Gateway corriendo en puerto 3000'));
