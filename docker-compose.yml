@@ -58,6 +58,17 @@ services:
     networks:
       - gtu-network
 
+  k6:
+    image: grafana/k6
+    container_name: k6-prueba
+    volumes:
+      - ./tests:/scripts
+    depends_on:
+      - api-gateway
+    networks:
+      - gtu-network
+    command: run /scripts/performance-test.js
+
 networks:
   gtu-network:
 
