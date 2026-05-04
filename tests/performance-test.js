@@ -13,12 +13,10 @@ export const options = {
 
 export default function () {
   const respuesta = http.get('http://api-gateway:3000/tareas');
-
   check(respuesta, {
     'estado 200': (r) => r.status === 200,
     'tiempo menor a 500ms': (r) => r.timings.duration < 500,
   });
-
   sleep(1);
 }
 
